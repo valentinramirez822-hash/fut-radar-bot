@@ -1,18 +1,36 @@
-name: Radar FUT Automatico
+name: Radar FUT Pro 24-7
 
 on:
   schedule:
-    # Corre todos los días a las 15:05 hs, 19:00 hs y 23:00 hs (Hora de Argentina)
+    # 1. ALERTA DE EVOS Y HYPE: 11:00 hs de Argentina (14:00 UTC)
+    - cron: '0 14 * * *'
+    # 2. REPORTES DE MERCADO: 15:05 hs, 19:00 hs y 23:00 hs de Argentina
     - cron: '5 18 * * *'
     - cron: '0 22 * * *'
     - cron: '0 2 * * *'
-  workflow_dispatch: # Te agrega un botón para pedir el reporte manualmente desde el celular cuando quieras
+    # 3. ESCUCHADOR DE TUS COMANDOS (/compre, /vendi, /radar, /agenda): Cada 15 minutos
+    - cron: '*/15 * * * *'
+
+  workflow_dispatch:
+    inputs:
+      modo_manual:
+        description: '¿Qué reporte querés mandar ahora mismo a tu celular?'
+        required: true
+        default: '--auto'
+        type: choice
+        options:
+          - '--auto'
+          - '--evo'
+          - '--check'
+
+permissions:
+  contents: write
 
 jobs:
-  escanear-mercado:
+  operar-mercado:
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar codigo
+      - name: Descargar codigo y agenda
         uses: actions/checkout@v4
 
       - name: Instalar Python
@@ -20,8 +38,25 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar librerias de lectura web
+      - name: Instalar librerias
         run: pip install requests beautifulsoup4 cloudscraper
 
-      - name: Ejecutar el Bot y mandar alerta a Telegram
-        run: python bot_fut.py
+      - name: Procesar comandos enviados desde tu celular
+        run: python bot_fut.py --check
+
+      - name: Ejecutar Alertas Programadas segun la hora de Argentina
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python bot_fut.py ${{ github.event.inputs.modo_manual }}
+          elif [ "${{ github.event.schedule }}" = "0 14 * * *" ]; then
+            python bot_fut.py --evo
+          elif [ "${{ github.event.schedule }}" = "5 18 * * *" ] || [ "${{ github.event.schedule }}" = "0 22 * * *" ] || [ "${{ github.event.schedule }}" = "0 2 * * *" ]; then
+            python bot_fut.py --auto
+          fi
+
+      - name: Guardar cambios en tu Agenda Contable en la nube
+        run: |
+          git config --global user.name "FUT Bot"
+          git config --global user.email "bot@github.com"
+          git add mi_agenda_fut.json
+          git diff --staged --quiet || (git commit -m "Actualizacion automatica de agenda" && git push)
