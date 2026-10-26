@@ -4,5 +4,6 @@
     "operaciones_cerradas": 0,
     "proximo_id": 1,
     "inventario": [],
-    "historial": []
+    "historial": [],
+    "ultimo_update_id": 832551031
 }
