@@ -1,0 +1,27 @@
+name: Radar FUT Automatico
+
+on:
+  schedule:
+    # Corre todos los días a las 15:05 hs, 19:00 hs y 23:00 hs (Hora de Argentina)
+    - cron: '5 18 * * *'
+    - cron: '0 22 * * *'
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Te agrega un botón para pedir el reporte manualmente desde el celular cuando quieras
+
+jobs:
+  escanear-mercado:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar librerias de lectura web
+        run: pip install requests beautifulsoup4 cloudscraper
+
+      - name: Ejecutar el Bot y mandar alerta a Telegram
+        run: python bot_fut.py
