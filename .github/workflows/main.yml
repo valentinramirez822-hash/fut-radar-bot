@@ -8,27 +8,33 @@ on:
     - cron: '5 18 * * *'
     - cron: '0 22 * * *'
     - cron: '0 2 * * *'
-    # 3. ESCUCHADOR CONTINUO DE COMANDOS EN TIEMPO REAL
-    - cron: '*/15 * * * *'
+    # 3. MANTENER VIVO EL BOT CADA 30 MIN (Con turnos de 55 min para cero espera)
+    - cron: '*/30 * * * *'
 
   workflow_dispatch:
     inputs:
       modo_manual:
-        description: '¿Qué reporte querés mandar ahora mismo?'
+        description: '¿Qué querés iniciar ahora en la nube?'
         required: true
-        default: '--auto'
+        default: '--cloud-live'
         type: choice
         options:
+          - '--cloud-live'
           - '--auto'
           - '--evo'
-          - '--cloud-live'
 
 permissions:
   contents: write
 
+# Si arranca un turno nuevo, guarda y cierra limpiamente el anterior sin solaparse
+concurrency:
+  group: bot-telegram-vivo
+  cancel-in-progress: false
+
 jobs:
   operar-mercado:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     steps:
       - name: Descargar codigo y agenda
         uses: actions/checkout@v4
@@ -43,7 +49,7 @@ jobs:
 
       - name: Ejecutar Alertas Programadas segun la hora de Argentina
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ github.event.inputs.modo_manual }}" != "--cloud-live" ]; then
             python bot_fut.py ${{ github.event.inputs.modo_manual }}
           elif [ "${{ github.event.schedule }}" = "0 14 * * *" ]; then
             python bot_fut.py --evo
@@ -51,7 +57,7 @@ jobs:
             python bot_fut.py --auto
           fi
 
-      - name: Escuchar tus comandos de Telegram en vivo
+      - name: Escuchar tus comandos y seguimientos en vivo (55 min continuos)
         run: python bot_fut.py --cloud-live
 
       - name: Guardar cambios en tu Agenda Contable en la nube
@@ -60,4 +66,4 @@ jobs:
           git config --global user.name "FUT Bot"
           git config --global user.email "bot@github.com"
           git add mi_agenda_fut.json
-          git diff --staged --quiet || (git commit -m "Actualizacion automatica de agenda" && git push)
+          git diff --staged --quiet || (git commit -m "Actualizacion automatica de agenda" && git push --rebase origin main || git push)
