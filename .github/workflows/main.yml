@@ -8,20 +8,20 @@ on:
     - cron: '5 18 * * *'
     - cron: '0 22 * * *'
     - cron: '0 2 * * *'
-    # 3. ESCUCHADOR DE TUS COMANDOS (/compre, /vendi, /radar, /agenda): Cada 15 minutos
+    # 3. ESCUCHADOR CONTINUO DE COMANDOS EN TIEMPO REAL
     - cron: '*/15 * * * *'
 
   workflow_dispatch:
     inputs:
       modo_manual:
-        description: '¿Qué reporte querés mandar ahora mismo a tu celular?'
+        description: '¿Qué reporte querés mandar ahora mismo?'
         required: true
         default: '--auto'
         type: choice
         options:
           - '--auto'
           - '--evo'
-          - '--check'
+          - '--cloud-live'
 
 permissions:
   contents: write
@@ -38,11 +38,8 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Instalar librerias
-        run: pip install requests beautifulsoup4 cloudscraper
-
-      - name: Procesar comandos enviados desde tu celular
-        run: python bot_fut.py --check
+      - name: Instalar libreria de conexion
+        run: pip install requests
 
       - name: Ejecutar Alertas Programadas segun la hora de Argentina
         run: |
@@ -54,7 +51,11 @@ jobs:
             python bot_fut.py --auto
           fi
 
+      - name: Escuchar tus comandos de Telegram en vivo
+        run: python bot_fut.py --cloud-live
+
       - name: Guardar cambios en tu Agenda Contable en la nube
+        if: always()
         run: |
           git config --global user.name "FUT Bot"
           git config --global user.email "bot@github.com"
