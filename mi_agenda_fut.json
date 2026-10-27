@@ -5,35 +5,6 @@
     "proximo_id": 1,
     "inventario": [],
     "historial": [],
-    "ultimo_update_id": 832551045,
-    "seguimientos": [
-        {
-            "resourceId": 268889,
-            "nombre_corto": "Álvaro Carreras",
-            "nombre_mostrar": "Álvaro Carreras (81 LB)",
-            "rating": 81,
-            "posicion": "LB",
-            "precio_inicial": 3000,
-            "precio_maximo": 3100,
-            "ultimo_precio": 3100,
-            "inicio_ts": 1793120775.202328,
-            "fin_ts": 1793124375.202328,
-            "ultimo_aviso_ts": 1793122074.8464708,
-            "minutos_totales": 60
-        },
-        {
-            "resourceId": 271446,
-            "nombre_corto": "Vicky López",
-            "nombre_mostrar": "Vicky López (84 RW)",
-            "rating": 84,
-            "posicion": "RW",
-            "precio_inicial": 4600,
-            "precio_maximo": 4800,
-            "ultimo_precio": 4800,
-            "inicio_ts": 1793121038.5467598,
-            "fin_ts": 1793124638.5467598,
-            "ultimo_aviso_ts": 1793121677.6509252,
-            "minutos_totales": 60
-        }
-    ]
+    "ultimo_update_id": 832551047,
+    "seguimientos": []
 }
