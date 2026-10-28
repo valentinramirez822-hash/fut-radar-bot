@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone, timedelta
 
 # --- 1. TUS DATOS DE TELEGRAM ---
-TOKEN = "8908344399:AAGeC35sIxMJZ3pFhyr3seUfp24KftyJcLU"
+TOKEN = os.environ.get("TELEGRAM_TOKEN", "8908344399:AAGeC35sIxMJZ3pFhyr3seUfp24KftyJcLU")
 CHAT_ID = "1656016116"
 
 IMPUESTO_EA = 0.05
