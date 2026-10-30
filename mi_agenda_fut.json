@@ -5,6 +5,21 @@
     "proximo_id": 1,
     "inventario": [],
     "historial": [],
-    "ultimo_update_id": 832551061,
-    "seguimientos": []
+    "ultimo_update_id": 832551063,
+    "seguimientos": [
+        {
+            "resourceId": 245830,
+            "nombre_corto": "Hasegawa",
+            "nombre_mostrar": "Hasegawa (88 CDM)",
+            "rating": 88,
+            "posicion": "CDM",
+            "precio_inicial": 13250,
+            "precio_maximo": 13500,
+            "ultimo_precio": 12250,
+            "inicio_ts": 1793372399.9646916,
+            "fin_ts": 1793375999.9646916,
+            "ultimo_aviso_ts": 1793374907.6903691,
+            "minutos_totales": 60
+        }
+    ]
 }
