@@ -6,20 +6,5 @@
     "inventario": [],
     "historial": [],
     "ultimo_update_id": 832551069,
-    "seguimientos": [
-        {
-            "resourceId": 242656,
-            "nombre_corto": "Meslier",
-            "nombre_mostrar": "Meslier (71 GK)",
-            "rating": 71,
-            "posicion": "GK",
-            "precio_inicial": 5400,
-            "precio_maximo": 6200,
-            "ultimo_precio": 6200,
-            "inicio_ts": 1794242712.7247593,
-            "fin_ts": 1794246312.7247593,
-            "ultimo_aviso_ts": 1794243358.5088217,
-            "minutos_totales": 60
-        }
-    ]
+    "seguimientos": []
 }
